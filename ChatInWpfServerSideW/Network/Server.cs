@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ChatInWpfServerSideW.Network
 {
@@ -20,7 +21,7 @@ namespace ChatInWpfServerSideW.Network
             {
                 while (true)
                 {
-                   // string message = Console.ReadLine();
+                    MessageBox.Show("Write");
                     if (Message == "quit")
                     {
                         socket.Shutdown(SocketShutdown.Send);
@@ -36,17 +37,17 @@ namespace ChatInWpfServerSideW.Network
 
             Task.Run(() =>
             {
-                while (true)
+               while (true)
                 {
                     int length = socket.Receive(buffer);
-                    //Console.WriteLine("Client  " + Encoding.ASCII.GetString(buffer, 0, length));
-                }
+                    var data = Encoding.ASCII.GetString(buffer, 0, length);
+               }
             });
         }
         public  void StartServer()
         {
             byte[] buffer = new byte[1024];
-            IPEndPoint endp = new IPEndPoint(IPAddress.Parse("192.168.1.103"), 1031);
+            IPEndPoint endp = new IPEndPoint(IPAddress.Parse("10.1.16.33"), 1031);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(endp);
             socket.Listen(10);
@@ -57,7 +58,7 @@ namespace ChatInWpfServerSideW.Network
         {
             while (true)
             {
-                //string message = Console.ReadLine();               
+                MessageBox.Show("Write");
                 client.Send(Encoding.ASCII.GetBytes(Message));
                 //Console.WriteLine("Server 1 " + message);
             }
@@ -76,7 +77,7 @@ namespace ChatInWpfServerSideW.Network
         public void StartProcess()
         {
             #region Client Message
-            IPEndPoint endp = new IPEndPoint(IPAddress.Parse("192.168.1.103"), 1031);
+            IPEndPoint endp = new IPEndPoint(IPAddress.Parse("10.1.16.33"), 1031);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(endp);
             socket.Listen(10);
@@ -91,7 +92,7 @@ namespace ChatInWpfServerSideW.Network
                     client = socket.Accept();
                     clients.Add(client);
                     ++counter;
-                    if (counter == 2)
+                    if (counter == 3)
                     {
                         break;
                     }
@@ -102,7 +103,8 @@ namespace ChatInWpfServerSideW.Network
             {
                 while (true)
                 {
-                   // string message = Console.ReadLine();
+                    // string message = Console.ReadLine();
+                    MessageBox.Show("Write");
                     if (Message == "quit")
                     {
                         foreach (var item in clients)
@@ -110,7 +112,7 @@ namespace ChatInWpfServerSideW.Network
 
                             item.Shutdown(SocketShutdown.Send);
                         }
-                        break;
+                       break;
                     }
                     else
                     {
@@ -127,7 +129,7 @@ namespace ChatInWpfServerSideW.Network
             });
             Task receiver = Task.Run(() =>
             {
-                while (true)
+               while (true)
                 {
 
                     Task ss1 = Task.Run(() =>
@@ -136,7 +138,7 @@ namespace ChatInWpfServerSideW.Network
                         {
 
                             int length = client.Receive(buffer);
-                            //Console.WriteLine(Encoding.ASCII.GetString(buffer, 0, length));
+                            var client_message = Encoding.ASCII.GetString(buffer, 0, length);
 
 
                         }

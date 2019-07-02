@@ -31,9 +31,9 @@ namespace ChatInWpfServerSideW.Commands
                 item.Id = MessageViewModel.AllMessages.Count - 1;
             else
                 item.Id = 0;
-            Server server = new Server();
-            server.Message = item.Text;
-            server.StartProcess();
+
+            App.Server.Message = item.Text;
+            App.Server.StartProcess();
             MessageViewModel.AllMessages.Add(item);
         }
     }

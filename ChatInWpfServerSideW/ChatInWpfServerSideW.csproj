@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Commands\SendCommand.cs" />
     <Compile Include="Entities\Message.cs" />
+    <Compile Include="Network\Server.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

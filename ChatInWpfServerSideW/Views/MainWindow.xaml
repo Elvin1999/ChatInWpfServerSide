@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="350" WindowStartupLocation="CenterScreen">
     <Grid Background="SpringGreen">
-
         <StackPanel>
             <ListView ItemsSource="{Binding AllMessages}" Height="350" Width="340" Background="SpringGreen">
                 <ListView.View>
@@ -19,7 +18,6 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-
                         <GridViewColumn Header="Message" Width="235">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

@@ -1,4 +1,5 @@
-﻿using ChatInWpfServerSideW.Entities;
+﻿using ChatInWpfServerSideW.Commands;
+using ChatInWpfServerSideW.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@ namespace ChatInWpfServerSideW.ViewModels
 {
    public class MessageViewModel:BaseViewModel
     {
+        public SendCommand SendCommand => new SendCommand(this);
         public MessageViewModel()
         {
             CurrentMessage = new Message();

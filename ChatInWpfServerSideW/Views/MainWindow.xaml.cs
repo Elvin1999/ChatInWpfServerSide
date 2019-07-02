@@ -27,25 +27,7 @@ namespace ChatInWpfServerSideW
         {
             InitializeComponent();
             MessageViewModel messageViewModel = new MessageViewModel();
-            messageViewModel.AllMessages = new ObservableCollection<Message>() {
-
-                new Message(){
-                    Id=1, DateTime=DateTime.Now, Text="Salam salam salam \n salam salam salam"
-                },
-                new Message(){
-                    Id=2, DateTime=DateTime.Now, Text="Salam salam salam  salam salam salam"
-                },
-                new Message(){
-                    Id=3, DateTime=DateTime.Now, Text="Salam salam salam  salam salam salam"
-                },
-                new Message(){
-                    Id=4, DateTime=DateTime.Now, Text="Salam salam salam  salam salam salam"
-                },
-                new Message(){
-                    Id=5, DateTime=DateTime.Now, Text="Salam salam salam  salam salam salam"
-                }
-
-            };
+            messageViewModel.AllMessages = new ObservableCollection<Message>();
             DataContext = messageViewModel;
 
         }

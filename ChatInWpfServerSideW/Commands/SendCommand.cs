@@ -24,7 +24,14 @@ namespace ChatInWpfServerSideW.Commands
 
         public void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            var item=MessageViewModel.CurrentMessage;
+            item.DateTime = DateTime.Now;
+            if (MessageViewModel.AllMessages.Count != 0)
+                item.Id = MessageViewModel.AllMessages.Count - 1;
+            else
+                item.Id = 0;
+
+            MessageViewModel.AllMessages.Add(item);
         }
     }
 }

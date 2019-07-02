@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="350" WindowStartupLocation="CenterScreen">
     <Grid Background="SpringGreen">
+
         <StackPanel>
-            <ListView ItemsSource="{Binding AllMessages}"
-                      Width="348">
+            <ListView ItemsSource="{Binding AllMessages}" Height="350" Width="340" Background="SpringGreen">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Who" Width="95">
@@ -30,10 +30,16 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <StackPanel Orientation="Horizontal" Margin="20,340,0,0">
+            <StackPanel Orientation="Horizontal" Margin="0,25,0,0" HorizontalAlignment="Center">
                 <TextBox Text="{Binding CurrentMessage.Text,Mode=TwoWay}" Width="200" ></TextBox>
-                <Button Content="Send" Width="80" Height="30"></Button>
+                <Button Background="SpringGreen" Content="Send" Command="{Binding SendCommand}" Width="80" Height="30"></Button>
             </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
+
+    
+    
+    
+    
+    

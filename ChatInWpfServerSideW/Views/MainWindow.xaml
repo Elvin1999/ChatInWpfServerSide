@@ -1,0 +1,39 @@
+﻿<Window x:Class="ChatInWpfServerSideW.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatInWpfServerSideW"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="350" WindowStartupLocation="CenterScreen">
+    <Grid Background="SpringGreen">
+        <StackPanel>
+            <ListView ItemsSource="{Binding AllMessages}"
+                      Width="348">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Who" Width="95">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="5,0" Height="50" Text="{Binding Id}"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Message" Width="235">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="5,0" Height="50" Text="{Binding Text}"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Orientation="Horizontal" Margin="20,340,0,0">
+                <TextBox Text="{Binding CurrentMessage.Text,Mode=TwoWay}" Width="200" ></TextBox>
+                <Button Content="Send" Width="80" Height="30"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

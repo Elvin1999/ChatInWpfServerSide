@@ -25,16 +25,24 @@ namespace ChatInWpfServerSideW.Commands
 
         public void Execute(object parameter)
         {
-            var item=MessageViewModel.CurrentMessage;
+            var item = MessageViewModel.CurrentMessage;
             item.DateTime = DateTime.Now;
             if (MessageViewModel.AllMessages.Count != 0)
                 item.Id = MessageViewModel.AllMessages.Count - 1;
             else
                 item.Id = 0;
+            App.Server.Message = item.Text + item.DateTime.ToShortDateString();
+            
+                App.Server.StartProcess();
 
-            App.Server.Message = item.Text;
-            App.Server.StartProcess();
-            MessageViewModel.AllMessages.Add(item);
+            //Task add = Task.Run(() =>
+            //{
+            //    App.Current.Dispatcher.Invoke(() =>
+            //    {
+            //        if (item.Text != String.Empty)
+            //            MessageViewModel.AllMessages.Add(item);
+            //    });
+            //});
         }
     }
 }

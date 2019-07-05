@@ -18,6 +18,6 @@ namespace ChatInWpfServerSideW
         public App()
         {
             Server = new Server();
-        }
+                    }
     }
 }

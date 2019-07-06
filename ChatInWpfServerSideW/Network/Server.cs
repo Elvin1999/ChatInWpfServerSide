@@ -1,4 +1,5 @@
-﻿using ChatInWpfServerSideW.ViewModels;
+﻿using ChatInWpfServerSideW.Entities;
+using ChatInWpfServerSideW.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,93 +14,96 @@ namespace ChatInWpfServerSideW.Network
     {
         byte[] buffer = new byte[1024];
         public string Message { get; set; }
+        public List<Message> AllMessages { get; set; }
+
         public void StartProcess()
         {
             #region Client Message
-            //IPEndPoint endp = new IPEndPoint(IPAddress.Parse("10.1.16.33"), 1031);
-            //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            //socket.Bind(endp);
-            //socket.Listen(10);
-            //List<Socket> clients = new List<Socket>();
-            //int counter = 0;
-            //Socket client = null;
-            //Task accept = Task.Run(() =>
-            //{
-            //    while (true)
-            //    {
-            //        client = socket.Accept();
-            //        clients.Add(client);
-            //        ++counter;
-            //        if (counter == 2)
-            //        {
-            //            break;
-            //        }
-            //    }
-            //});
             Task sender = Task.Run(() =>
             {
 
                 // string message = Console.ReadLine();
+
                 while (true)
                 {
-                    if (Message != String.Empty)
+                    App.Current.Dispatcher.Invoke(() =>
                     {
-                        if (Message == "quit")
+                        if (Message != String.Empty)
                         {
-                            foreach (var item in App.clients)
-                            {
-                                item.Shutdown(SocketShutdown.Send);
-                            }
-
-                        }
-                        else
-                        {
-                            Task ss = Task.Run(() =>
+                            if (Message == "quit")
                             {
                                 foreach (var item in App.clients)
                                 {
-                                    if (Message != String.Empty)
-                                    {
-                                        MessageBox.Show(Message);
-                                        item.Send(Encoding.ASCII.GetBytes(Message));
-                                        Message = String.Empty;
-                                    }
-
-                                    //                    App.Current.Dispatcher.Invoke(() =>
-                                    //{
-
-                                    //    MessageViewModel.AllMessages.Add(item);
-                                    //});
+                                    item.Shutdown(SocketShutdown.Send);
                                 }
-                            });
+
+                            }
+                            else
+                            {
+                                Task ss = Task.Run(() =>
+                                {
+                                    foreach (var item in App.clients)
+                                    {
+                                        if (Message != String.Empty)
+                                        {
+                                            //MessageBox.Show(Message);
+                                            item.Send(Encoding.ASCII.GetBytes(Message));
+                                            Message = String.Empty;
+                                        }
+
+                                        //                    App.Current.Dispatcher.Invoke(() =>
+                                        //{
+
+                                        //    MessageViewModel.AllMessages.Add(item);
+                                        //});
+                                    }
+                                });
+                            }
                         }
-                    }
+
+                    });
                 }
             });
+
+
             Task receiver = Task.Run(() =>
             {
                 while (true)
                 {
-                    Task ss1 = Task.Run(() =>
-                                    {
-                                        try
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        Task ss1 = Task.Run(() =>
                                         {
-
-                                            int length = App.client.Receive(buffer);
-                                            var client_message = Encoding.ASCII.GetString(buffer, 0, length);
-                                            if (client_message != String.Empty)
+                                            try
                                             {
 
-                                                MessageBox.Show(client_message);
+                                                int length = App.client.Receive(buffer);
+                                                var client_message = Encoding.ASCII.GetString(buffer, 0, length);
+                                                if (client_message != String.Empty)
+                                                {
+                                                    MessageBox.Show(client_message);
+                                                    var item = new Message();
+                                                    item.DateTime = DateTime.Now; 
+                                                    item.Id = 1;
+                                                    item.Text = client_message;
+                                                    App.Server.Message = item.Text + "   " + item.DateTime.ToLongTimeString();
+
+                                                    App.Current.Dispatcher.Invoke(() =>
+                                                    {
+                                                        if (item.Text != String.Empty)
+                                                            App.Server.AllMessages.Add(item);
+                                                    });
+
+
+                                                }
                                             }
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                    });
+                                            catch (Exception)
+                                            {
+                                            }
+                                        });
+                    });
+
                 }
-
-
             });
             Task.WaitAll(sender, receiver);
             #endregion      

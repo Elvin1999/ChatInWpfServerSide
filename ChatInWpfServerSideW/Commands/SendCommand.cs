@@ -1,4 +1,5 @@
-﻿using ChatInWpfServerSideW.Network;
+﻿using ChatInWpfServerSideW.Entities;
+using ChatInWpfServerSideW.Network;
 using ChatInWpfServerSideW.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -28,24 +29,20 @@ namespace ChatInWpfServerSideW.Commands
             var item = MessageViewModel.CurrentMessage;
             item.DateTime = DateTime.Now;
             if (MessageViewModel.AllMessages.Count != 0)
-                item.Id = MessageViewModel.AllMessages.Count - 1;
+                item.Id = MessageViewModel.AllMessages.Count;
             else
                 item.Id = 0;
-
-            App.Server.Message = item.Text + " time :  " + item.DateTime.ToLongTimeString();
-            Task add = Task.Run(() =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                              {
-                                  if (item.Text != String.Empty)
-                                      MessageViewModel.AllMessages.Add(item);
-                              });
-            });
-
-            Task start = Task.Run(() =>
-            {
-                App.Server.StartProcess();
-            });
+            if (item.Text != String.Empty)
+                App.Server.Message = item.Text + "   " + item.DateTime.ToLongTimeString();
+            // Task add = Task.Run(() =>
+            //  {
+            App.Current.Dispatcher.Invoke(() =>
+                          {
+                              if (item.Text != String.Empty)
+                                  MessageViewModel.AllMessages.Add(item);
+                          });
+            //    });
+            MessageViewModel.CurrentMessage = new Message();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ChatInWpfServerSideW.Entities;
+using ChatInWpfServerSideW.Network;
 using ChatInWpfServerSideW.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace ChatInWpfServerSideW
             InitializeComponent();
             MessageViewModel messageViewModel = new MessageViewModel();
             messageViewModel.AllMessages = new ObservableCollection<Message>();
+            //App.Server = new Server();
+            App.Server.AllMessages = new List<Message>(messageViewModel.AllMessages);
             DataContext = messageViewModel;
 
         }

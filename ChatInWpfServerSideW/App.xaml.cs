@@ -19,6 +19,7 @@ namespace ChatInWpfServerSideW
         public static Server Server { get; set; }
         public static List<Socket> clients = new List<Socket>();
         public static Socket client = null;
+      
         void ConnectToServer()
         {
             Server = new Server();
@@ -43,8 +44,15 @@ namespace ChatInWpfServerSideW
         }
         public App()
         {
-            Task connect = Task.Run(() => {
+            Task connect = Task.Run(() =>
+            {
                 ConnectToServer();
+            });
+            connect.Wait();
+
+            Task start = Task.Run(() =>
+            {
+                App.Server.StartProcess();
             });
         }
     }

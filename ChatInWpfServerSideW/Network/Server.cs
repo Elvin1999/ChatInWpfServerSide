@@ -21,50 +21,46 @@ namespace ChatInWpfServerSideW.Network
             #region Client Message
             Task sender = Task.Run(() =>
             {
-
                 // string message = Console.ReadLine();
-
-                while (true)
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (Message != String.Empty)
-                        {
-                            if (Message == "quit")
-                            {
-                                foreach (var item in App.clients)
-                                {
-                                    item.Shutdown(SocketShutdown.Send);
-                                }
-
-                            }
-                            else
-                            {
-                                Task ss = Task.Run(() =>
-                                {
-                                    foreach (var item in App.clients)
-                                    {
-                                        if (Message != String.Empty)
+              
+                                        while (true)
                                         {
+  App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                            if (Message != String.Empty)
+                                            {
+                                                if (Message == "quit")
+                                                {
+                                                    foreach (var item in App.clients)
+                                                    {
+                                                        item.Shutdown(SocketShutdown.Send);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Task ss = Task.Run(() =>
+                                    {
+                                                    foreach (var item in App.clients)
+                                                    {
+                                                        if (Message != String.Empty && Message != null)
+                                                        {
                                             //MessageBox.Show(Message);
                                             item.Send(Encoding.ASCII.GetBytes(Message));
-                                            Message = String.Empty;
-                                        }
-
+                                                            Message = String.Empty;
+                                                        }
                                         //                    App.Current.Dispatcher.Invoke(() =>
                                         //{
 
                                         //    MessageViewModel.AllMessages.Add(item);
                                         //});
                                     }
-                                });
-                            }
-                        }
-
-                    });
-                }
+                                                });
+                                                }
+                                            }
+ });
+                                        }
+                                   
             });
-
 
             Task receiver = Task.Run(() =>
             {
@@ -83,7 +79,7 @@ namespace ChatInWpfServerSideW.Network
                                                 {
                                                     MessageBox.Show(client_message);
                                                     var item = new Message();
-                                                    item.DateTime = DateTime.Now; 
+                                                    item.DateTime = DateTime.Now;
                                                     item.Id = 1;
                                                     item.Text = client_message;
                                                     App.Server.Message = item.Text + "   " + item.DateTime.ToLongTimeString();

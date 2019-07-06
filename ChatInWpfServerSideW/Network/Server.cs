@@ -77,7 +77,7 @@ namespace ChatInWpfServerSideW.Network
                                                 if (client_message != String.Empty)
                                                 {
                                                     MessageBox.Show(client_message);
-                                                    var item = new Message();
+                                                    var item = new Message(); 
                                                     item.DateTime = DateTime.Now;
                                                     item.Id = MessageViewModel.AllMessages.Count+1;
                                                     try

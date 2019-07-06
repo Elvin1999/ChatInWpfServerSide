@@ -29,8 +29,7 @@ namespace ChatInWpfServerSideW
             InitializeComponent();
             MessageViewModel messageViewModel = new MessageViewModel();
             messageViewModel.AllMessages = new ObservableCollection<Message>();
-            //App.Server = new Server();
-            App.Server.AllMessages = new List<Message>(messageViewModel.AllMessages);
+            App.Server.MessageViewModel = messageViewModel;
             DataContext = messageViewModel;
 
         }

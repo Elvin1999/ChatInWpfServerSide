@@ -14,52 +14,51 @@ namespace ChatInWpfServerSideW.Network
     {
         byte[] buffer = new byte[1024];
         public string Message { get; set; }
-        public List<Message> AllMessages { get; set; }
-
+        public MessageViewModel MessageViewModel { get; set; }
         public void StartProcess()
         {
             #region Client Message
             Task sender = Task.Run(() =>
             {
                 // string message = Console.ReadLine();
-              
-                                        while (true)
+
+                while (true)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                                                      {
+                                                          if (Message != String.Empty)
+                                                          {
+                                                              if (Message == "quit")
+                                                              {
+                                                                  foreach (var item in App.clients)
+                                                                  {
+                                                                      item.Shutdown(SocketShutdown.Send);
+                                                                  }
+                                                              }
+                                                              else
+                                                              {
+                                                                  Task ss = Task.Run(() =>
+                                {
+                                    foreach (var item in App.clients)
+                                    {
+                                        if (Message != String.Empty && Message != null)
                                         {
-  App.Current.Dispatcher.Invoke(() =>
-                                    {
-                                            if (Message != String.Empty)
-                                            {
-                                                if (Message == "quit")
-                                                {
-                                                    foreach (var item in App.clients)
-                                                    {
-                                                        item.Shutdown(SocketShutdown.Send);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Task ss = Task.Run(() =>
-                                    {
-                                                    foreach (var item in App.clients)
-                                                    {
-                                                        if (Message != String.Empty && Message != null)
-                                                        {
                                             //MessageBox.Show(Message);
                                             item.Send(Encoding.ASCII.GetBytes(Message));
-                                                            Message = String.Empty;
-                                                        }
+                                            Message = String.Empty;
+                                        }
                                         //                    App.Current.Dispatcher.Invoke(() =>
                                         //{
 
                                         //    MessageViewModel.AllMessages.Add(item);
                                         //});
                                     }
-                                                });
-                                                }
-                                            }
- });
-                                        }
-                                   
+                                });
+                                                              }
+                                                          }
+                                                      });
+                }
+
             });
 
             Task receiver = Task.Run(() =>
@@ -80,21 +79,35 @@ namespace ChatInWpfServerSideW.Network
                                                     MessageBox.Show(client_message);
                                                     var item = new Message();
                                                     item.DateTime = DateTime.Now;
-                                                    item.Id = 1;
-                                                    item.Text = client_message;
-                                                    App.Server.Message = item.Text + "   " + item.DateTime.ToLongTimeString();
-
-                                                    App.Current.Dispatcher.Invoke(() =>
+                                                    item.Id = MessageViewModel.AllMessages.Count+1;
+                                                    try
                                                     {
-                                                        if (item.Text != String.Empty)
-                                                            App.Server.AllMessages.Add(item);
-                                                    });
+                                                        if (client_message != String.Empty)
+                                                        {
+                                                            App.Server.Message = client_message + "   " + item.DateTime.ToLongTimeString();
+                                                            item.Text = App.Server.Message;
+                                                            if (item.Text != String.Empty)
+                                                            {
+                                                                App.Current.Dispatcher.Invoke(() =>
+                                                                {
+                                                                    MessageViewModel.AllMessages.Add(item);
+                                                                });
+                                                            }
+                                                        }
+
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+
+                                                        MessageBox.Show(ex.Message);
+                                                    }
 
 
                                                 }
                                             }
-                                            catch (Exception)
+                                            catch (Exception ex)
                                             {
+
                                             }
                                         });
                     });

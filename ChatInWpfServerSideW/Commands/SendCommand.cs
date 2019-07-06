@@ -31,18 +31,21 @@ namespace ChatInWpfServerSideW.Commands
                 item.Id = MessageViewModel.AllMessages.Count - 1;
             else
                 item.Id = 0;
-            App.Server.Message = item.Text + item.DateTime.ToShortDateString();
-            
-                App.Server.StartProcess();
 
-            //Task add = Task.Run(() =>
-            //{
-            //    App.Current.Dispatcher.Invoke(() =>
-            //    {
-            //        if (item.Text != String.Empty)
-            //            MessageViewModel.AllMessages.Add(item);
-            //    });
-            //});
+            App.Server.Message = item.Text + " time :  " + item.DateTime.ToLongTimeString();
+            Task add = Task.Run(() =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                              {
+                                  if (item.Text != String.Empty)
+                                      MessageViewModel.AllMessages.Add(item);
+                              });
+            });
+
+            Task start = Task.Run(() =>
+            {
+                App.Server.StartProcess();
+            });
         }
     }
 }

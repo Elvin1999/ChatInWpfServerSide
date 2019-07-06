@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatInWpfServerSideW.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,27 +16,26 @@ namespace ChatInWpfServerSideW.Network
         public void StartProcess()
         {
             #region Client Message
-            IPEndPoint endp = new IPEndPoint(IPAddress.Parse("10.1.16.33"), 1031);
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Bind(endp);
-            socket.Listen(10);
-            byte[] buffer = new byte[1024];
-            List<Socket> clients = new List<Socket>();
-            int counter = 0;
-            Socket client = null;
-            Task accept = Task.Run(() =>
-            {
-                while (true)
-                {
-                    client = socket.Accept();
-                    clients.Add(client);
-                    ++counter;
-                    if (counter == 2)
-                    {
-                        break;
-                    }
-                }
-            });
+            //IPEndPoint endp = new IPEndPoint(IPAddress.Parse("10.1.16.33"), 1031);
+            //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //socket.Bind(endp);
+            //socket.Listen(10);
+            //List<Socket> clients = new List<Socket>();
+            //int counter = 0;
+            //Socket client = null;
+            //Task accept = Task.Run(() =>
+            //{
+            //    while (true)
+            //    {
+            //        client = socket.Accept();
+            //        clients.Add(client);
+            //        ++counter;
+            //        if (counter == 2)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //});
             Task sender = Task.Run(() =>
             {
 
@@ -46,7 +46,7 @@ namespace ChatInWpfServerSideW.Network
                     {
                         if (Message == "quit")
                         {
-                            foreach (var item in clients)
+                            foreach (var item in App.clients)
                             {
                                 item.Shutdown(SocketShutdown.Send);
                             }
@@ -56,23 +56,28 @@ namespace ChatInWpfServerSideW.Network
                         {
                             Task ss = Task.Run(() =>
                             {
-                                foreach (var item in clients)
+                                foreach (var item in App.clients)
                                 {
-                                    item.Send(Encoding.ASCII.GetBytes(Message));
-                                    Message = String.Empty;
+                                    if (Message != String.Empty)
+                                    {
+                                        MessageBox.Show(Message);
+                                        item.Send(Encoding.ASCII.GetBytes(Message));
+                                        Message = String.Empty;
+                                    }
+
+                                    //                    App.Current.Dispatcher.Invoke(() =>
+                                    //{
+
+                                    //    MessageViewModel.AllMessages.Add(item);
+                                    //});
                                 }
                             });
                         }
                     }
-
                 }
-
-
-
             });
             Task receiver = Task.Run(() =>
             {
-
                 while (true)
                 {
                     Task ss1 = Task.Run(() =>
@@ -80,9 +85,13 @@ namespace ChatInWpfServerSideW.Network
                                         try
                                         {
 
-                                            int length = client.Receive(buffer);
+                                            int length = App.client.Receive(buffer);
                                             var client_message = Encoding.ASCII.GetString(buffer, 0, length);
-                                            MessageBox.Show(client_message);
+                                            if (client_message != String.Empty)
+                                            {
+
+                                                MessageBox.Show(client_message);
+                                            }
                                         }
                                         catch (Exception)
                                         {
